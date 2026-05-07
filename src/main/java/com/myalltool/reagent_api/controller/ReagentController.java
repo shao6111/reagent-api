@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.myalltool.reagent_api.model.Reagent;
 import com.myalltool.reagent_api.repository.ReagentRepository;
@@ -57,5 +59,15 @@ public class ReagentController {
         reagent.setQuantity(currentQuantity - amount);
 
         return reagentRepository.save(reagent);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReagent(@PathVariable Long id) {
+        if (!reagentRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        reagentRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
