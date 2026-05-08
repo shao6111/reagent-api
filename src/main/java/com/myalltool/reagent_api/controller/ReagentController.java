@@ -27,6 +27,16 @@ public class ReagentController {
     public ReagentController(ReagentRepository reagentRepository) {
         this.reagentRepository = reagentRepository;
     }
+    
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteReagent(@PathVariable Long id) {
+    if (!reagentRepository.existsById(id)) {
+        return ResponseEntity.notFound().build();
+    }
+
+    reagentRepository.deleteById(id);
+    return ResponseEntity.noContent().build();
+}
 
     @GetMapping
     public List<Reagent> getAllReagents() {
@@ -35,8 +45,29 @@ public class ReagentController {
 
     @PostMapping
     public Reagent addReagent(@RequestBody Reagent reagent) {
-        return reagentRepository.save(reagent);
+
+    Reagent existing = reagentRepository
+            .findByReagentNameAndLotNo(reagent.getReagentName(), reagent.getLotNo());
+
+    if (existing != null) {
+        existing.setQuantity(existing.getQuantity() + reagent.getQuantity());
+        return reagentRepository.save(existing);
     }
+
+    return reagentRepository.save(reagent);
+}
+
+    Reagent existing = reagentRepository
+        .findByReagentNameAndLotNo(reagent.getReagentName(), reagent.getLotNo());
+
+    if (existing != null) {
+        existing.setQuantity(existing.getQuantity() + reagent.getQuantity());
+        return reagentRepository.save(existing);
+    }
+
+    return reagentRepository.save(reagent);
+    }
+
 
     @PutMapping("/{id}/use")
     public Reagent useReagent(
@@ -61,13 +92,5 @@ public class ReagentController {
         return reagentRepository.save(reagent);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReagent(@PathVariable Long id) {
-        if (!reagentRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
 
-        reagentRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 }
