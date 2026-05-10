@@ -57,17 +57,6 @@ public ResponseEntity<Void> deleteReagent(@PathVariable Long id) {
     return reagentRepository.save(reagent);
 }
 
-    Reagent existing = reagentRepository
-        .findByReagentNameAndLotNo(reagent.getReagentName(), reagent.getLotNo());
-
-    if (existing != null) {
-        existing.setQuantity(existing.getQuantity() + reagent.getQuantity());
-        return reagentRepository.save(existing);
-    }
-
-    return reagentRepository.save(reagent);
-    }
-
 
     @PutMapping("/{id}/use")
     public Reagent useReagent(
