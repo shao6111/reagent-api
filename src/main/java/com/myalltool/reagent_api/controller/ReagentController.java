@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.myalltool.reagent_api.model.Reagent;
 import com.myalltool.reagent_api.repository.ReagentRepository;
+import com.myalltool.reagent_api.model.ReagentUsageLog;
+import com.myalltool.reagent_api.repository.ReagentUsageLogRepository;
 
 @RestController
 @RequestMapping("/api/reagents")
@@ -23,9 +25,14 @@ import com.myalltool.reagent_api.repository.ReagentRepository;
 public class ReagentController {
 
     private final ReagentRepository reagentRepository;
+    private final ReagentUsageLogRepository reagentUsageLogRepository;
 
-    public ReagentController(ReagentRepository reagentRepository) {
+    public ReagentController(
+        ReagentRepository reagentRepository,
+        ReagentUsageLogRepository reagentUsageLogRepository
+) {
         this.reagentRepository = reagentRepository;
+        this.reagentUsageLogRepository = reagentUsageLogRepository;
     }
     
 @DeleteMapping("/{id}")
@@ -77,9 +84,22 @@ public ResponseEntity<Void> deleteReagent(@PathVariable Long id) {
         }
 
         reagent.setQuantity(currentQuantity - amount);
+       ReagentUsageLog usageLog = new ReagentUsageLog();
+usageLog.setReagentId(reagent.getReagentId());
+usageLog.setReagentCategory(reagent.getReagentCategory());
+usageLog.setReagentName(reagent.getReagentName());
+usageLog.setLotNo(reagent.getLotNo());
+usageLog.setUsedQuantity(amount);
+usageLog.setRemainingQuantity(currentQuantity - amount);
+usageLog.setUnit(reagent.getUnit());
+usageLog.setStorageLocation(reagent.getStorageLocation());
 
+reagentUsageLogRepository.save(usageLog);
         return reagentRepository.save(reagent);
     }
-
+@GetMapping("/usage-logs")
+public List<ReagentUsageLog> getUsageLogs() {
+    return reagentUsageLogRepository.findAllByOrderByUsedAtDesc();
+}
 
 }

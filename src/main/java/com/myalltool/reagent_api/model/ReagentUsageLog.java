@@ -1,51 +1,47 @@
 package com.myalltool.reagent_api.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 
 @Entity
-@Table(name = "reagents")
-public class Reagent {
+public class ReagentUsageLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reagent_id")
+    private Long usageLogId;
+
     private Long reagentId;
 
-    @Column(name = "reagent_category")
     private String reagentCategory;
 
-    @Column(name = "reagent_name")
     private String reagentName;
 
-    @Column(name = "lot_no")
     private String lotNo;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    private Integer usedQuantity;
 
-    @Column(name = "unit")
+    private Integer remainingQuantity;
+
     private String unit;
 
-    @Column(name = "expiry_date")
-    private LocalDate expiryDate;
-
-    @Column(name = "storage_location")
     private String storageLocation;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime usedAt;
+
+    public Long getUsageLogId() {
+        return usageLogId;
+    }
+
+    public void setUsageLogId(Long usageLogId) {
+        this.usageLogId = usageLogId;
+    }
 
     public Long getReagentId() {
         return reagentId;
@@ -56,11 +52,11 @@ public class Reagent {
     }
 
     public String getReagentCategory() {
-    return reagentCategory;
+        return reagentCategory;
     }
 
     public void setReagentCategory(String reagentCategory) {
-    this.reagentCategory = reagentCategory;
+        this.reagentCategory = reagentCategory;
     }
 
     public String getReagentName() {
@@ -79,12 +75,20 @@ public class Reagent {
         this.lotNo = lotNo;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getUsedQuantity() {
+        return usedQuantity;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setUsedQuantity(Integer usedQuantity) {
+        this.usedQuantity = usedQuantity;
+    }
+
+    public Integer getRemainingQuantity() {
+        return remainingQuantity;
+    }
+
+    public void setRemainingQuantity(Integer remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
     }
 
     public String getUnit() {
@@ -95,14 +99,6 @@ public class Reagent {
         this.unit = unit;
     }
 
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(LocalDate expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
     public String getStorageLocation() {
         return storageLocation;
     }
@@ -111,11 +107,11 @@ public class Reagent {
         this.storageLocation = storageLocation;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getUsedAt() {
+        return usedAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
+    public void setUsedAt(LocalDateTime usedAt) {
+        this.usedAt = usedAt;
     }
 }
